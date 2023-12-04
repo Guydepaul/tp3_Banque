@@ -1,0 +1,47 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'global.css' %}">
+    <script>
+        function confirmLogout() {
+            if (confirm("Êtes-vous sûr de vouloir vous déconnecter ?")) {
+                document.getElementById('logout-form').submit();
+            }
+        }
+    </script>
+</head>
+<body>
+    <header>
+        <h1>Ma Banque</h1>
+        <nav>
+            <ul>
+                <li><a href="/">Accueil</a></li>
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'dashboard' %}">Tableau de bord</a></li>
+                    <li><a href="javascript:void(0);" onclick="confirmLogout();">Se déconnecter</a></li>
+                    <form id="logout-form" method="post" action="/" style="display: none;">
+                        {% csrf_token %}
+                        <input type="hidden" name="logout" value="true">
+                    </form>
+                {% else %}
+                    <li><a href="{% url 'login' %}">Se connecter</a></li>
+                    <li><a href="{% url 'register' %}">S'inscrire</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; 2023 Ma Banque. Tous droits réservés.</p>
+    </footer>
+</body>
+</html>
+
